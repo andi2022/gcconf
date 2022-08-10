@@ -1,5 +1,5 @@
 #!/system/bin/sh
-# version 1.4.1
+# version 1.4.2
 
 #Version checks
 Ver55atlas="1.0"
@@ -154,6 +154,9 @@ update_all(){
       fi
       if [ "$atlas_install" != "install" ] && [ "$pogo_install" != "install" ] ; then
         echo "`date +%Y-%m-%d_%T` Updates checked, nothing to install" >> $logfile
+        am force-stop com.pokemod.atlas
+        am startservice com.pokemod.atlas/com.pokemod.atlas.services.MappingService
+        echo "`date +%Y-%m-%d_%T` Started Atlas" >> $logfile
       fi
     fi
 }
