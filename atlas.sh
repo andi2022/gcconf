@@ -1,5 +1,5 @@
 #!/system/bin/sh
-# version 1.4.0
+# version 1.4.1
 
 #Version checks
 Ver55atlas="1.0"
@@ -45,7 +45,7 @@ esac
 install_atlas(){
     # install 55atlas
     mount -o remount,rw /system
-    until /system/bin/curl -s -k -L --fail --show-error -o /system/etc/init.d/55atlas $aconf_download/55atlas || { echo "`date +%Y-%m-%d_%T` Download 55atlas failed, exit script" >> $logfile ; exit 1; } ;do
+    until $download /system/etc/init.d/55atlas $aconf_download/55atlas || { echo "`date +%Y-%m-%d_%T` Download 55atlas failed, exit script" >> $logfile ; exit 1; } ;do
         sleep 2
     done
     chmod +x /system/etc/init.d/55atlas

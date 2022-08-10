@@ -83,3 +83,4 @@ echo DeviceName > /data/local/initDName && \
 chmod +x /system/bin/atlas.sh && \
 /system/bin/atlas.sh -ia'
 ```
+ - If the script finishes successfuly and the device reboots, you can `adb disconnect` from it.
