@@ -4,6 +4,9 @@
 #Version checks
 Ver55atlas="1.0"
 
+export ANDROID_DATA=/data
+export ANDROID_ROOT=/system
+
 #Create logfile
 if [ ! -e /sdcard/aconf.log ] ;then
     touch /sdcard/aconf.log
