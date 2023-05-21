@@ -1,0 +1,10 @@
+#!/system/bin/sh
+# version 1.0
+
+#Create logfile
+if [ ! -e /sdcard/aconf.log ] ;then
+    touch /sdcard/aconf.log
+fi
+
+echo "`date +%Y-%m-%d_%T` Starting crond" >> /sdcard/aconf.log
+crond -b

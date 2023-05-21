@@ -34,6 +34,7 @@ The directory should contain the following files :
 - The APK of the 64bits version of PoGo matching your version of Atlas
 - The Atlas config file (to be described hereunder)
 - The 55atlas file from this repo
+- The 55cron file from this repo
 
 Hers is a typical example of directory content :
 
@@ -44,6 +45,7 @@ pokemongo_armeabi-v7a_0.235.0.apk
 atlas_config.json
 versions
 55atlas
+55cron
 ```
 Please note the naming convention for the different files, this is important and shouldn't be changed.
 

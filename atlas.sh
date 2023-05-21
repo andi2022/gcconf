@@ -1,8 +1,9 @@
 #!/system/bin/sh
-# version 1.4.4
+# version 1.4.5
 
 #Version checks
 Ver55atlas="1.0"
+Ver55cron="1.0"
 
 export ANDROID_DATA=/data
 export ANDROID_ROOT=/system
@@ -54,6 +55,22 @@ install_atlas(){
     done
     chmod +x /system/etc/init.d/55atlas
     echo "`date +%Y-%m-%d_%T` 55atlas installed, from master" >> $logfile
+
+    # install 55cron
+    until /system/bin/curl -s -k -L --fail --show-error -o  /system/etc/init.d/55cron https://raw.githubusercontent.com/Kneckter/aconf-rdm/master/55cron || { echo "`date +%Y-%m-%d_%T` Download 55cron failed, exit script" >> $logfile ; exit 1; } ;do
+        sleep 2
+    done
+    chmod +x /system/etc/init.d/55cron
+    echo "`date +%Y-%m-%d_%T` 55cron installed, from master" >> $logfile
+
+    # install cron job
+    until /system/bin/curl -s -k -L --fail --show-error -o  /system/bin/ping_test.sh https://raw.githubusercontent.com/Kneckter/aconf-rdm/master/ping_test.sh || { echo "`date +%Y-%m-%d_%T` Download ping_test.sh failed, exit script" >> $logfile ; exit 1; } ;do
+        sleep 2
+    done
+    chmod +x /system/bin/ping_test.sh
+    mkdir /system/etc/crontabs || true
+    touch /system/etc/crontabs/root
+    echo "45 * * * * /system/bin/ping_test.sh" > /system/etc/crontabs/root
 
     mount -o remount,ro /system
 
@@ -258,6 +275,32 @@ if [[ $(basename $0) = "atlas_new.sh" ]] ;then
         mount -o remount,ro /system
         new55=$(head -2 /system/etc/init.d/55atlas | /system/bin/grep '# version' | awk '{ print $NF }')
         echo "`date +%Y-%m-%d_%T` 55atlas $old55=>$new55" >> $logfile
+    fi
+fi
+
+#update 55cron if needed
+if [[ $(basename $0) = "atlas_new.sh" ]] ;then
+    old55=$(head -2 /system/etc/init.d/55cron | /system/bin/grep '# version' | awk '{ print $NF }')
+    if [ $Ver55cron != $old55 ] ;then
+        mount -o remount,rw /system
+        # install 55cron
+        until /system/bin/curl -s -k -L --fail --show-error -o  /system/etc/init.d/55cron https://raw.githubusercontent.com/Kneckter/aconf-rdm/master/55cron || { echo "`date +%Y-%m-%d_%T` Download 55cron failed, exit script" >> $logfile ; exit 1; } ;do
+            sleep 2
+        done
+        chmod +x /system/etc/init.d/55cron
+        echo "`date +%Y-%m-%d_%T` 55cron installed, from master" >> $logfile
+
+        # install cron job
+        until /system/bin/curl -s -k -L --fail --show-error -o  /system/bin/ping_test.sh https://raw.githubusercontent.com/Kneckter/aconf-rdm/master/ping_test.sh || { echo "`date +%Y-%m-%d_%T` Download ping_test.sh failed, exit script" >> $logfile ; exit 1; } ;do
+            sleep 2
+        done
+        chmod +x /system/bin/ping_test.sh
+        mkdir /system/etc/crontabs || true
+        touch /system/etc/crontabs/root
+        echo "45 * * * * /system/bin/ping_test.sh" > /system/etc/crontabs/root
+        mount -o remount,ro /system
+        new55=$(head -2 /system/etc/init.d/55cron | /system/bin/grep '# version' | awk '{ print $NF }')
+        echo "`date +%Y-%m-%d_%T` 55cron $old55=>$new55" >> $logfile
     fi
 fi
 
