@@ -1,5 +1,5 @@
 #!/system/bin/sh
-# version 1.4.5
+# version 1.4.6
 
 #Version checks
 Ver55atlas="1.0"
@@ -70,7 +70,7 @@ install_atlas(){
     chmod +x /system/bin/ping_test.sh
     mkdir /system/etc/crontabs || true
     touch /system/etc/crontabs/root
-    echo "45 * * * * /system/bin/ping_test.sh" > /system/etc/crontabs/root
+    echo "55 * * * * /system/bin/ping_test.sh" > /system/etc/crontabs/root
 
     mount -o remount,ro /system
 
@@ -280,7 +280,7 @@ fi
 
 #update 55cron if needed
 if [[ $(basename $0) = "atlas_new.sh" ]] ;then
-    old55=$(head -2 /system/etc/init.d/55cron | /system/bin/grep '# version' | awk '{ print $NF }')
+    old55=$(head -2 /system/etc/init.d/55cron || echo "# version 0.0" | /system/bin/grep '# version' | awk '{ print $NF }')
     if [ $Ver55cron != $old55 ] ;then
         mount -o remount,rw /system
         # install 55cron
@@ -297,7 +297,7 @@ if [[ $(basename $0) = "atlas_new.sh" ]] ;then
         chmod +x /system/bin/ping_test.sh
         mkdir /system/etc/crontabs || true
         touch /system/etc/crontabs/root
-        echo "45 * * * * /system/bin/ping_test.sh" > /system/etc/crontabs/root
+        echo "55 * * * * /system/bin/ping_test.sh" > /system/etc/crontabs/root
         mount -o remount,ro /system
         new55=$(head -2 /system/etc/init.d/55cron | /system/bin/grep '# version' | awk '{ print $NF }')
         echo "`date +%Y-%m-%d_%T` 55cron $old55=>$new55" >> $logfile
