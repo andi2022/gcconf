@@ -1,0 +1,12 @@
+#!/system/bin/sh
+# version 1.0
+
+#Create logfile
+if [ ! -e /data/local/tmp/gcconf.log ] ;then
+    touch /data/local/tmp/gcconf.log
+fi
+echo "" >> /data/local/tmp/gcconf.log
+echo "`date +%Y-%m-%d_%T` Device rebooted" >> /data/local/tmp/gcconf.log
+
+# execute gocheats.sh
+sh -x /system/bin/gocheats.sh -ua

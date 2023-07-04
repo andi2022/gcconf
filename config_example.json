@@ -1,0 +1,5 @@
+{
+    "api_key": "<your_gc_api_key>",
+    "device_name": "dummy",
+    "device_configuration_manager_url": "http://<dcm_url>"
+}
