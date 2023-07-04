@@ -67,7 +67,7 @@ gocheats=2.0.296
  - Using the following commands to create the gcconf_download and gocheats.sh files
    - Change the `url`, `authUser`, and `authPass` to the values used for NGINX
    - Change `DeviceName` to the name you want on this device
-   - Change `TimeZone` to your corresponding  TimeZone like Europe/Zurich
+   - Change `TimeZone` to your corresponding  TimeZone like Europe/Zurich (Supported timezone list: https://gist.github.com/mtrung/a3f7caaa7e674ac7e6c4)
 ```
 adb shell 
 su -c 'file='/data/local/gcconf_download' && \
