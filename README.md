@@ -33,6 +33,7 @@ The directory should contain the following files :
 - The APK of the 32bits version of PoGo matching your version of GC
 - The APK of the 64bits version of PoGo matching your version of GC
 - The GC config file (to be described hereunder)
+- A version file (to be described hereunder)
 
 Hers is a typical example of directory content :
 
@@ -61,6 +62,8 @@ Here is the content of the `versions` file:
 pogo=0.275.1
 gocheats=2.0.296
 ```
+The script will automatically check those versions. If the versions have changed, it will download the corresponding APKs from your above specified folder and will install them automatically.
+The script run after every reboot or with the cron job at 11:00 PM.
 # Installation
  - This setup assumes the device has been imaged and rooted already.
  - Connecting to the device using ADB `adb connect xxx.xxx.xxx.xxx` where the X's are replaced with the device's IP address.
