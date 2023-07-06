@@ -1,5 +1,5 @@
 #!/system/bin/sh
-# version 1.4.9
+# version 1.5.0
 
 #Version checks
 Ver55gocheats="1.0"
@@ -103,7 +103,7 @@ install_gocheats(){
     magisk --sqlite "INSERT INTO policies (uid,package_name,policy,until,logging,notification) VALUES($guid,'com.gocheats.launcher',2,0,1,0)"
     /system/bin/pm grant com.gocheats.launcher android.permission.READ_EXTERNAL_STORAGE
     /system/bin/pm grant com.gocheats.launcher android.permission.WRITE_EXTERNAL_STORAGE
-    echo "`date +%Y-%m-%d_%T` atlas granted su and settings set" >> $logfile
+    echo "`date +%Y-%m-%d_%T` gocheats granted su and settings set" >> $logfile
 
     # download gocheats config file and adjust orgin to rgc setting
     install_config
@@ -246,7 +246,7 @@ if [[ $(basename $0) != "gocheats_new.sh" ]] ;then
     chmod +x /system/bin/gocheats_new.sh
     newsh=$(head -2 /system/bin/gocheats_new.sh | /system/bin/grep '# version' | awk '{ print $NF }')
     if [[ $oldsh != $newsh ]] ;then
-        echo "`date +%Y-%m-%d_%T` atlas.sh $oldsh=>$newsh, restarting script" >> $logfile
+        echo "`date +%Y-%m-%d_%T` gocheats.sh $oldsh=>$newsh, restarting script" >> $logfile
         cp /system/bin/gocheats_new.sh /system/bin/gocheats.sh
         mount -o remount,ro /system
         /system/bin/gocheats_new.sh $@
