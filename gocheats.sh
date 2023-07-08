@@ -1,5 +1,5 @@
 #!/system/bin/sh
-# version 1.5.0
+# version 1.5.1
 
 #Version checks
 Ver55gocheats="1.0"
@@ -178,6 +178,9 @@ update_all(){
 		echo "`date +%Y-%m-%d_%T` Stopped gocheats + pogo" >> $logfile
         am force-stop com.gocheats.launcher
 		am force-stop com.nianticlabs.pokemongo
+		echo "`date +%Y-%m-%d_%T` Uninstall pogo $pinstalled" >> $logfile
+		pm uninstall com.nianticlabs.pokemongo
+		echo "`date +%Y-%m-%d_%T` Reinstall pogo $pversions" >> $logfile
         /system/bin/pm install -r /sdcard/Download/pogo.apk || { echo "`date +%Y-%m-%d_%T` Install pogo failed, downgrade perhaps? Exit script" >> $logfile ; exit 1; }
         /system/bin/rm -f /sdcard/Download/pogo.apk
         /system/bin/monkey -p com.gocheats.launcher 1
