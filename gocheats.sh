@@ -1,5 +1,5 @@
 #!/system/bin/sh
-# version 1.5.2
+# version 1.5.3
 
 #Version checks
 Ver55gocheats="1.0"
@@ -171,7 +171,15 @@ update_all(){
 		echo "`date +%Y-%m-%d_%T` Reinstall gocheats $gcversions" >> $logfile
         /system/bin/pm install -r /sdcard/Download/gocheats.apk || { echo "`date +%Y-%m-%d_%T` Install gocheats failed, downgrade perhaps? Exit script" >> $logfile ; exit 1; }
         /system/bin/rm -f /sdcard/Download/gocheats.apk
-        /system/bin/monkey -p com.gocheats.launcher 1
+		# Grant su access + settings after reinstall
+		
+		guid="$(dumpsys package com.gocheats.launcher | /system/bin/grep userId | awk -F'=' '{print $2}')"
+        magisk --sqlite "DELETE from policies WHERE package_name='com.gocheats.launcher'"
+        magisk --sqlite "INSERT INTO policies (uid,package_name,policy,until,logging,notification) VALUES($guid,'com.gocheats.launcher',2,0,1,0)"
+        /system/bin/pm grant com.gocheats.launcher android.permission.READ_EXTERNAL_STORAGE
+        /system/bin/pm grant com.gocheats.launcher android.permission.WRITE_EXTERNAL_STORAGE
+        echo "`date +%Y-%m-%d_%T` gocheats granted su access after reinstall" >> $logfile
+		/system/bin/monkey -p com.gocheats.launcher 1
         echo "`date +%Y-%m-%d_%T` Started gocheats" >> $logfile
         reboot=1
       fi
