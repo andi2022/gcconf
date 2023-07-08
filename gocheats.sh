@@ -1,5 +1,5 @@
 #!/system/bin/sh
-# version 1.5.1
+# version 1.5.2
 
 #Version checks
 Ver55gocheats="1.0"
@@ -166,6 +166,9 @@ update_all(){
         # install gocheats
 		echo "`date +%Y-%m-%d_%T` Stopped gocheats" >> $logfile
         am force-stop com.gocheats.launcher
+		echo "`date +%Y-%m-%d_%T` Uninstall gocheats $gcinstalled" >> $logfile
+		pm uninstall com.gocheats.launcher
+		echo "`date +%Y-%m-%d_%T` Reinstall gocheats $gcversions" >> $logfile
         /system/bin/pm install -r /sdcard/Download/gocheats.apk || { echo "`date +%Y-%m-%d_%T` Install gocheats failed, downgrade perhaps? Exit script" >> $logfile ; exit 1; }
         /system/bin/rm -f /sdcard/Download/gocheats.apk
         /system/bin/monkey -p com.gocheats.launcher 1
