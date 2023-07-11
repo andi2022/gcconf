@@ -67,6 +67,7 @@ pogo=0.275.3
 gocheats=2.0.298
 ```
 Optionally you can also add settings to update eMagisk.
+**You should have at least Magisk version 23.**
 Here is the content of the `versions` file with eMagisk support:
 ```
 pogo=0.275.3
