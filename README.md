@@ -34,6 +34,8 @@ The directory should contain the following files :
 - The APK of the 64bits version of PoGo matching your version of GC
 - The GC config file (to be described hereunder)
 - A version file (to be described hereunder)
+- The ZIP file of eMagisk
+- The eMagisk config file
 
 Hers is a typical example of directory content :
 
@@ -43,6 +45,8 @@ pokemongo_arm64-v8a_0.275.1.apk
 pokemongo_armeabi-v7a_0.275.1.apk
 config.json
 versions
+emagisk.config (Optional > see versions file)
+eMagisk-9.5.6.zip (Optional see versions file)
 ```
 Please note the naming convention for the different files, this is important and shouldn't be changed.
 
@@ -59,11 +63,22 @@ Please note that `"device_name":"dummy"` should not be changed. The script will 
 
 Here is the content of the `versions` file:
 ```
-pogo=0.275.1
-gocheats=2.0.296
+pogo=0.275.3
+gocheats=2.0.298
 ```
+Optionally you can also add settings to update eMagisk.
+Here is the content of the `versions` file with eMagisk support:
+```
+pogo=0.275.3
+gocheats=2.0.298
+emagiskversion=9.5.6
+emagiskstatus=on
+```
+The eMagisk version is normally raised by the `build.sh` script, you can also modify the `module.prop` file in the eMagisk module.
+
 The script will automatically check those versions. If the versions have changed, it will download the corresponding APKs from your above specified folder and will install them automatically.
 The script run after every reboot or with the cron job at 11:00 PM.
+
 # Installation
  - This setup assumes the device has been imaged and rooted already.
  - Connecting to the device using ADB `adb connect xxx.xxx.xxx.xxx` where the X's are replaced with the device's IP address.
