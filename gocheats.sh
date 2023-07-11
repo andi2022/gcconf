@@ -1,5 +1,5 @@
 #!/system/bin/sh
-# version 1.5.3
+# version 1.5.4
 
 #Version checks
 Ver55gocheats="1.0"
@@ -132,6 +132,9 @@ update_all(){
     pversions=$(/system/bin/grep 'pogo' $gcconf_versions | /system/bin/grep -v '_' | awk -F "=" '{ print $NF }')
     gcinstalled=$(dumpsys package com.gocheats.launcher | /system/bin/grep versionName | head -n1 | /system/bin/sed 's/ *versionName=//')
     gcversions=$(/system/bin/grep 'gocheats' $gcconf_versions | /system/bin/grep -v '_' | awk -F "=" '{ print $NF }')
+    eminstalled=$(cat /data/adb/modules/emagisk/module.prop | /system/bin/grep version | head -n1 | /system/bin/sed 's/ *version=v//')
+	emversions=$(/system/bin/grep 'emagiskversion' $gcconf_versions | /system/bin/grep -v '_' | awk -F "=" '{ print $NF }')
+    emstatus=$(/system/bin/grep 'emagiskstatus' $gcconf_versions | /system/bin/grep -v '_' | awk -F "=" '{ print $NF }')
 
     if [[ $pinstalled != $pversions ]] ;then
       echo "`date +%Y-%m-%d_%T` New pogo version detected, $pinstalled=>$pversions" >> $logfile
@@ -159,7 +162,23 @@ update_all(){
      echo "`date +%Y-%m-%d_%T` gocheats already on correct version" >> $logfile
     fi
 
-    if [ ! -z "$gocheats_install" ] && [ ! -z "$pogo_install" ] ;then
+    if [[ $emstatus == "on" ]] && [ $eminstalled != $emversions ] ;then
+      echo "`date +%Y-%m-%d_%T` New emagisk version detected, $eminstalled=>$emversions" >> $logfile
+      /system/bin/rm -f /sdcard/Download/emagisk.zip
+      until $download /sdcard/Download/emagisk.zip $gcconf_download/eMagisk-$emversions.zip || { echo "`date +%Y-%m-%d_%T` $download /sdcard/Download/emagisk.zip $gcconf_download/eMagisk-$emversions.zip" >> $logfile ; echo "`date +%Y-%m-%d_%T` Download emagisk failed, exit script" >> $logfile ; exit 1; } ;do
+        sleep 2
+      done
+	  until $download /data/local/tmp/emagisk.config $gcconf_download/emagisk.config || { echo "`date +%Y-%m-%d_%T` $download /data/local/tmp/emagisk.config $gcconf_download/emagisk.config" >> $logfile ; echo "`date +%Y-%m-%d_%T` Download emagisk config file failed, exit script" >> $logfile ; exit 1; } ;do
+        sleep 2
+	  done
+	  # set emagisk to be installed
+      emagisk_install="install"
+    else
+     emagisk_install="skip"
+     echo "`date +%Y-%m-%d_%T` emagisk already on correct version or not enabled" >> $logfile
+    fi
+
+    if [ ! -z "$gocheats_install" ] && [ ! -z "$pogo_install" ] && [ ! -z "$emagisk_install" ] ;then
       echo "`date +%Y-%m-%d_%T` All updates checked and downloaded if needed" >> $logfile
       if [ "$gocheats_install" = "install" ] ;then
         echo "`date +%Y-%m-%d_%T` Updating gocheats" >> $logfile
@@ -198,7 +217,14 @@ update_all(){
         echo "`date +%Y-%m-%d_%T` Started gocheats" >> $logfile
         reboot=1
       fi
-      if [ "$gocheats_install" != "install" ] && [ "$pogo_install" != "install" ] ; then
+	  if [ "$emagisk_install" = "install" ] ;then
+        echo "`date +%Y-%m-%d_%T` Updating emagisk" >> $logfile
+        # install emagisk
+        magisk --install-module /sdcard/Download/emagisk.zip
+		/system/bin/rm -f /sdcard/Download/emagisk.zip
+        reboot=1
+      fi
+      if [ "$gocheats_install" != "install" ] && [ "$pogo_install" != "install" ] && [ "$emagisk_install" != "install" ] ; then
         echo "`date +%Y-%m-%d_%T` Updates checked, nothing to install" >> $logfile
 
       fi
@@ -305,7 +331,7 @@ fi
 
 #update 55cron if needed
 if [[ $(basename $0) = "gocheats_new.sh" ]] ;then
-    old55=$(head -2 /system/etc/init.d/55cron || echo "# version 0.0" | /system/bin/grep '# version' | awk '{ print $NF }')
+    old55=$(head -2 /system/etc/init.d/55cron | /system/bin/grep '# version' | awk '{ print $NF }')
     if [ "$Ver55cron" != "$old55" ] ;then
         mount -o remount,rw /system
 		mount -o remount,rw /system/etc/init.d || true
