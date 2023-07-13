@@ -1,5 +1,5 @@
 #!/system/bin/sh
-# version 1.5.4
+# version 1.5.5
 
 #Version checks
 Ver55gocheats="1.0"
@@ -274,6 +274,8 @@ until ping -c1 8.8.8.8 >/dev/null 2>/dev/null || ping -c1 1.1.1.1 >/dev/null 2>/
     sleep 10
 done
 echo "`date +%Y-%m-%d_%T` Internet connection available" >> $logfile
+echo "`date +%Y-%m-%d_%T` Wait 60 seconds to finish boot" >> $logfile
+sleep 60
 
 
 #download latest gocheats.sh
