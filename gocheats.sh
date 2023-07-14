@@ -1,9 +1,9 @@
 #!/system/bin/sh
-# version 1.5.5
+# version 1.5.6
 
 #Version checks
 Ver55gocheats="1.0"
-Ver55cron="1.1"
+Ver55cron="1.2"
 
 export ANDROID_DATA=/data
 export ANDROID_ROOT=/system
@@ -49,6 +49,7 @@ esac
 install_gocheats(){
     # install 55gocheats
     mount -o remount,rw /system
+	mount -o remount,rw /system/etc || true
     mount -o remount,rw /system/etc/init.d || true
 	until /system/bin/curl -s -k -L --fail --show-error -o  /system/etc/init.d/55gocheats https://raw.githubusercontent.com/andi2022/gcconf/master/55gocheats || { echo "`date +%Y-%m-%d_%T` Download 55gcconf failed, exit script" >> $logfile ; exit 1; } ;do
         sleep 2
@@ -336,6 +337,7 @@ if [[ $(basename $0) = "gocheats_new.sh" ]] ;then
     old55=$(head -2 /system/etc/init.d/55cron | /system/bin/grep '# version' | awk '{ print $NF }')
     if [ "$Ver55cron" != "$old55" ] ;then
         mount -o remount,rw /system
+		mount -o remount,rw /system/etc || true
 		mount -o remount,rw /system/etc/init.d || true
 		mount -o remount,rw /system/etc/crontabs || true
         # install 55cron
@@ -356,6 +358,7 @@ if [[ $(basename $0) = "gocheats_new.sh" ]] ;then
         echo "0 23 * * * /system/bin/gocheats.sh -ua" >> /system/etc/crontabs/root
 		crond -b
         mount -o remount,ro /system
+		mount -o remount,ro /system/etc || true
 		mount -o remount,ro /system/etc/init.d || true
 		mount -o remount,ro /system/etc/crontabs || true
         new55=$(head -2 /system/etc/init.d/55cron | /system/bin/grep '# version' | awk '{ print $NF }')
