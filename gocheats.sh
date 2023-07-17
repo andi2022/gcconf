@@ -1,5 +1,5 @@
 #!/system/bin/sh
-# version 1.5.7
+# version 1.5.8
 
 #Version checks
 Ver55gocheats="1.0"
@@ -137,7 +137,7 @@ update_all(){
 	emversions=$(/system/bin/grep 'emagiskversion' $gcconf_versions | /system/bin/grep -v '_' | awk -F "=" '{ print $NF }')
     emstatus=$(/system/bin/grep 'emagiskstatus' $gcconf_versions | /system/bin/grep -v '_' | awk -F "=" '{ print $NF }')
 
-    if [[ $pinstalled != $pversions ]] ;then
+    if [[ "$pinstalled" != "$pversions" ]] ;then
       echo "`date +%Y-%m-%d_%T` New pogo version detected, $pinstalled=>$pversions" >> $logfile
       /system/bin/rm -f /sdcard/Download/pogo.apk
       until $download /sdcard/Download/pogo.apk $gcconf_download/pokemongo_$arch\_$pversions.apk || { echo "`date +%Y-%m-%d_%T` $download /sdcard/Download/pogo.apk $gcconf_download/pokemongo_$arch\_$pversions.apk" >> $logfile ; echo "`date +%Y-%m-%d_%T` Download pogo failed, exit script" >> $logfile ; exit 1; } ;do
@@ -163,7 +163,7 @@ update_all(){
      echo "`date +%Y-%m-%d_%T` gocheats already on correct version" >> $logfile
     fi
 
-    if [[ $emstatus == "on" ]] && [ $eminstalled != $emversions ] ;then
+    if [[ $emstatus == "on" ]] && [ "$eminstalled" != "$emversions" ] ;then
       echo "`date +%Y-%m-%d_%T` New emagisk version detected, $eminstalled=>$emversions" >> $logfile
       /system/bin/rm -f /sdcard/Download/emagisk.zip
       until $download /sdcard/Download/emagisk.zip $gcconf_download/eMagisk-$emversions.zip || { echo "`date +%Y-%m-%d_%T` $download /sdcard/Download/emagisk.zip $gcconf_download/eMagisk-$emversions.zip" >> $logfile ; echo "`date +%Y-%m-%d_%T` Download emagisk failed, exit script" >> $logfile ; exit 1; } ;do
@@ -235,7 +235,7 @@ update_all(){
 downgrade_pogo(){
     pinstalled=$(dumpsys package com.nianticlabs.pokemongo | /system/bin/grep versionName | head -n1 | /system/bin/sed 's/ *versionName=//')
     pversions=$(/system/bin/grep 'pogo' $gcconf_versions | /system/bin/grep -v '_' | awk -F "=" '{ print $NF }')
-    if [[ $pinstalled != $pversions ]] ;then
+    if [[ "$pinstalled" != "$pversions" ]] ;then
       until $download /sdcard/Download/pogo.apk $gcconf_download/pokemongo_$arch\_$pversions.apk || { echo "`date +%Y-%m-%d_%T` $download /sdcard/Download/pogo.apk $gcconf_download/pokemongo_$arch\_$pversions.apk" >> $logfile ; echo "`date +%Y-%m-%d_%T` Download pogo failed, exit script" >> $logfile ; exit 1; } ;do
         sleep 2
       done
@@ -288,7 +288,7 @@ if [[ $(basename $0) != "gocheats_new.sh" ]] ;then
     done
     chmod +x /system/bin/gocheats_new.sh
     newsh=$(head -2 /system/bin/gocheats_new.sh | /system/bin/grep '# version' | awk '{ print $NF }')
-    if [[ $oldsh != $newsh ]] ;then
+    if [[ "$oldsh" != "$newsh" ]] ;then
         echo "`date +%Y-%m-%d_%T` gocheats.sh $oldsh=>$newsh, restarting script" >> $logfile
         cp /system/bin/gocheats_new.sh /system/bin/gocheats.sh
         mount -o remount,ro /system
@@ -318,7 +318,7 @@ echo "`date +%Y-%m-%d_%T` Downloaded latest versions file"  >> $logfile
 #update 55gocheats if needed
 if [[ $(basename $0) = "gocheats_new.sh" ]] ;then
     old55=$(head -2 /system/etc/init.d/55gocheats | /system/bin/grep '# version' | awk '{ print $NF }')
-    if [ $Ver55gocheats != $old55 ] ;then
+    if [ "$Ver55gocheats" != "$old55" ] ;then
         mount -o remount,rw /system
 		mount -o remount,rw /system/etc/init.d || true
         until /system/bin/curl -s -k -L --fail --show-error -o /system/etc/init.d/55gocheats https://raw.githubusercontent.com/andi2022/gcconf/master/55gocheats || { echo "`date +%Y-%m-%d_%T` Download 55gocheats failed, exit script" >> $logfile ; exit 1; } ;do
