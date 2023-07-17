@@ -1,5 +1,5 @@
 #!/system/bin/sh
-# version 1.5.6
+# version 1.5.7
 
 #Version checks
 Ver55gocheats="1.0"
@@ -150,7 +150,7 @@ update_all(){
      echo "`date +%Y-%m-%d_%T` PoGo already on correct version" >> $logfile
     fi
 
-    if [ $gcinstalled != $gcversions ] ;then
+    if [ "$gcinstalled" != "$gcversions" ] ;then
       echo "`date +%Y-%m-%d_%T` New gocheats version detected, $gcinstalled=>$gcversions" >> $logfile
       /system/bin/rm -f /sdcard/Download/gocheats.apk
       until $download /sdcard/Download/gocheats.apk $gcconf_download/com.gocheats.launcher_v$gcversions.apk || { echo "`date +%Y-%m-%d_%T` $download /sdcard/Download/gocheats.apk $gcconf_download/com.gocheats.launcher_v$gcversions.apk" >> $logfile ; echo "`date +%Y-%m-%d_%T` Download gocheats failed, exit script" >> $logfile ; exit 1; } ;do
