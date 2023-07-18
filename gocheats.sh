@@ -1,9 +1,9 @@
 #!/system/bin/sh
-# version 1.5.9
+# version 1.5.10
 
 #Version checks
 Ver55gocheats="1.0"
-Ver55cron="1.2"
+Ver55cron="1.3"
 
 export ANDROID_DATA=/data
 export ANDROID_ROOT=/system
@@ -69,11 +69,11 @@ install_gocheats(){
         sleep 2
     done
     chmod +x /system/bin/ping_test.sh
-    mkdir /system/etc/crontabs || true
-    touch /system/etc/crontabs/root
-    echo "15 * * * * /system/bin/ping_test.sh" > /system/etc/crontabs/root
-    echo "0 23 * * * /system/bin/gocheats.sh -ua" >> /system/etc/crontabs/root
-	crond -b
+    mkdir /data/crontabs || true
+    touch /data/crontabs/root
+    echo "15 * * * * /system/bin/ping_test.sh" > /data/crontabs/root
+    echo "0 23 * * * /system/bin/gocheats.sh -ua" >> /data/crontabs/root
+	crond -b -c /data/crontabs
 
     mount -o remount,ro /system
 
@@ -343,7 +343,7 @@ if [[ $(basename $0) = "gocheats_new.sh" ]] ;then
         mount -o remount,rw /system
 		mount -o remount,rw /system/etc || true
 		mount -o remount,rw /system/etc/init.d || true
-		mount -o remount,rw /system/etc/crontabs || true
+
         # install 55cron
         until /system/bin/curl -s -k -L --fail --show-error -o  /system/etc/init.d/55cron https://raw.githubusercontent.com/andi2022/gcconf/master/55cron || { echo "`date +%Y-%m-%d_%T` Download 55cron failed, exit script" >> $logfile ; exit 1; } ;do
             sleep 2
@@ -356,15 +356,23 @@ if [[ $(basename $0) = "gocheats_new.sh" ]] ;then
             sleep 2
         done
         chmod +x /system/bin/ping_test.sh
-        mkdir /system/etc/crontabs || true
-        touch /system/etc/crontabs/root
-        echo "15 * * * * /system/bin/ping_test.sh" > /system/etc/crontabs/root
-        echo "0 23 * * * /system/bin/gocheats.sh -ua" >> /system/etc/crontabs/root
-		crond -b
+        mkdir /data/crontabs || true
+        touch /data/crontabs/root
+        echo "15 * * * * /system/bin/ping_test.sh" > /data/crontabs/root
+        echo "0 23 * * * /system/bin/gocheats.sh -ua" >> /data/crontabs/root
+		crond -b -c /data/crontabs
+		
+		# remove old cron job file
+        if [[ -f /system/etc/crontabs/root ]] ;then
+            mount -o remount,rw /system/etc/crontabs || true
+            echo "`date +%Y-%m-%d_%T` remove old crontab file /system/etc/crontabs/root" >> $logfile
+            rm -f /system/etc/crontabs/root
+            mount -o remount,ro /system/etc/crontabs || true
+        fi
+		
         mount -o remount,ro /system
 		mount -o remount,ro /system/etc || true
 		mount -o remount,ro /system/etc/init.d || true
-		mount -o remount,ro /system/etc/crontabs || true
         new55=$(head -2 /system/etc/init.d/55cron | /system/bin/grep '# version' | awk '{ print $NF }')
         echo "`date +%Y-%m-%d_%T` 55cron $old55=>$new55" >> $logfile
     fi

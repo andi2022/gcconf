@@ -105,6 +105,7 @@ chmod +x /system/bin/gocheats.sh && \
 # Remove gcconf
 If you will remove gcconf you need to delete the following files. For some files you need to mount the volume with read / write.
 ```
+/data/crontabs/root
 /data/local/gcconf_download
 /data/local/gcconf_versions
 /data/local/tmp/config.json
@@ -114,7 +115,6 @@ If you will remove gcconf you need to delete the following files. For some files
 /system/bin/gocheats.sh
 /system/bin/gocheats_new.sh
 /system/bin/ping_test.sh
-/system/etc/crontabs/root
 /system/etc/init.d/55cron
 /system/etc/init.d/55gocheats
 ```
@@ -123,7 +123,7 @@ This will help to remove gcconf from your device.
 adb shell
 su -c 'mount -o remount,rw /system && \
 mount -o remount,rw /system/etc/init.d || true && \
-mount -o remount,rw /system/etc/crontabs || true && \
+rm -f /data/crontabs/root && \
 rm -f /data/local/gcconf_download && \
 rm -f /data/local/gcconf_versions && \
 rm -f /data/local/tmp/config.json && \
@@ -134,7 +134,6 @@ rm -f /system/bin/gocheats.sh && \
 rm -f /system/bin/gocheats_new.sh && \
 rm -f /system/bin/ping_test.sh && \
 rm -f /system/etc/crontabs/root && \
-rm -f /system/etc/init.d/55cron && \
 rm -f /system/etc/init.d/55gocheats && \
 mount -o remount,ro /system'
 ```
