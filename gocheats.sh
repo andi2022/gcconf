@@ -1,5 +1,5 @@
 #!/system/bin/sh
-# version 1.5.8
+# version 1.5.9
 
 #Version checks
 Ver55gocheats="1.0"
@@ -182,17 +182,19 @@ update_all(){
     if [ ! -z "$gocheats_install" ] && [ ! -z "$pogo_install" ] && [ ! -z "$emagisk_install" ] ;then
       echo "`date +%Y-%m-%d_%T` All updates checked and downloaded if needed" >> $logfile
       if [ "$gocheats_install" = "install" ] ;then
-        echo "`date +%Y-%m-%d_%T` Updating gocheats" >> $logfile
+        echo "`date +%Y-%m-%d_%T` Start updating gocheats" >> $logfile
         # install gocheats
-		echo "`date +%Y-%m-%d_%T` Stopped gocheats" >> $logfile
+		echo "`date +%Y-%m-%d_%T` Stopped gocheats service" >> $logfile
         am force-stop com.gocheats.launcher
+		sleep 2
 		echo "`date +%Y-%m-%d_%T` Uninstall gocheats $gcinstalled" >> $logfile
 		pm uninstall com.gocheats.launcher
+		sleep 2
 		echo "`date +%Y-%m-%d_%T` Reinstall gocheats $gcversions" >> $logfile
         /system/bin/pm install -r /sdcard/Download/gocheats.apk || { echo "`date +%Y-%m-%d_%T` Install gocheats failed, downgrade perhaps? Exit script" >> $logfile ; exit 1; }
         /system/bin/rm -f /sdcard/Download/gocheats.apk
+
 		# Grant su access + settings after reinstall
-		
 		guid="$(dumpsys package com.gocheats.launcher | /system/bin/grep userId | awk -F'=' '{print $2}')"
         magisk --sqlite "DELETE from policies WHERE package_name='com.gocheats.launcher'"
         magisk --sqlite "INSERT INTO policies (uid,package_name,policy,until,logging,notification) VALUES($guid,'com.gocheats.launcher',2,0,1,0)"
@@ -204,13 +206,15 @@ update_all(){
         reboot=1
       fi
       if [ "$pogo_install" = "install" ] ;then
-        echo "`date +%Y-%m-%d_%T` Updating pogo" >> $logfile
+        echo "`date +%Y-%m-%d_%T` Start updating pogo" >> $logfile
         # install pogo
-		echo "`date +%Y-%m-%d_%T` Stopped gocheats + pogo" >> $logfile
+		echo "`date +%Y-%m-%d_%T` Stopped gocheats service + pogo" >> $logfile
         am force-stop com.gocheats.launcher
 		am force-stop com.nianticlabs.pokemongo
+		sleep 2
 		echo "`date +%Y-%m-%d_%T` Uninstall pogo $pinstalled" >> $logfile
 		pm uninstall com.nianticlabs.pokemongo
+		sleep 2
 		echo "`date +%Y-%m-%d_%T` Reinstall pogo $pversions" >> $logfile
         /system/bin/pm install -r /sdcard/Download/pogo.apk || { echo "`date +%Y-%m-%d_%T` Install pogo failed, downgrade perhaps? Exit script" >> $logfile ; exit 1; }
         /system/bin/rm -f /sdcard/Download/pogo.apk
@@ -219,7 +223,7 @@ update_all(){
         reboot=1
       fi
 	  if [ "$emagisk_install" = "install" ] ;then
-        echo "`date +%Y-%m-%d_%T` Updating emagisk" >> $logfile
+        echo "`date +%Y-%m-%d_%T` Start updating emagisk" >> $logfile
         # install emagisk
         magisk --install-module /sdcard/Download/emagisk.zip
 		/system/bin/rm -f /sdcard/Download/emagisk.zip
